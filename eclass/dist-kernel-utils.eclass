@@ -26,6 +26,12 @@
 # CONFIG_EFI_ZBOOT enabled. This effects the name of the kernel image on
 # arm64 and riscv. Mainly useful for sys-kernel/gentoo-kernel-bin.
 
+# @ECLASS_VARIABLE: KERNEL_INITRAMFS_GENERATOR
+# @DESCRIPTION:
+# Defines the initramfs generator to be used.
+# By default, dracut is used.
+KERNEL_INITRAMFS_GENERATOR=${KERNEL_INITRAMFS_GENERATOR:=dracut}
+
 if [[ ! ${_DIST_KERNEL_UTILS} ]]; then
 
 case ${EAPI} in
@@ -57,16 +63,20 @@ dist-kernel_build_initramfs() {
 	local image=${output%/*}/${rel_image_path##*/}
 
 	local args=(
+		# Tell Dracut to force initramfs rebuild
 		--force
-		# if uefi=yes is used, dracut needs to locate the kernel image
+		# Dracut needs to be able to find the kernel image to check if it's a UKI
+		# or to create a combined kernel+initramfs UEFI executable
 		--kernel-image "${image}"
+		# The initramfs generator must know the kernel version to pull relevant modules
+		--kver "${version}"
 
-		# positional arguments
-		"${output}" "${version}"
+		# The final argument should be the output path
+		"${output}"
 	)
 
-	ebegin "Building initramfs via dracut"
-	dracut "${args[@]}"
+	ebegin "Building initramfs via ${KERNEL_INITRAMFS_GENERATOR}"
+	$KERNEL_INITRAMFS_GENERATOR "${args[@]}"
 	eend ${?} || die -n "Building initramfs failed"
 }
 
