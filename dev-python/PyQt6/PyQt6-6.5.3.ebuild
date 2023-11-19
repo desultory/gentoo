@@ -17,7 +17,7 @@ HOMEPAGE="https://www.riverbankcomputing.com/software/pyqt/"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 # defaults match what is provided with qtbase by default (except testlib),
 # reduces the need to set flags but does increase build time a fair amount
 IUSE="
@@ -64,6 +64,7 @@ DEPEND="
 	positioning? ( >=dev-qt/qtpositioning-${QT_PV} )
 	qml? ( >=dev-qt/qtdeclarative-${QT_PV}[widgets?] )
 	quick3d? ( >=dev-qt/qtquick3d-${QT_PV} )
+	quick? ( >=dev-qt/qtdeclarative-${QT_PV}[opengl] )
 	sensors? ( >=dev-qt/qtsensors-${QT_PV} )
 	serialport? ( >=dev-qt/qtserialport-${QT_PV} )
 	speech? ( >=dev-qt/qtspeech-${QT_PV} )

@@ -13,7 +13,7 @@ if [[ ${PV} == *9999 ]] ; then
 else
 	# TODO: Change tarballs to gitlab too...?
 	SRC_URI="mirror://nongnu/${PN}/${P}.tar.xz"
-	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~m68k ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~arm64-macos ~ppc-macos ~x64-macos ~x64-solaris"
+	KEYWORDS="~alpha amd64 arm arm64 hppa ~ia64 ~loong ~m68k ~mips ppc ppc64 ~riscv ~s390 sparc x86 ~amd64-linux ~x86-linux ~arm64-macos ~ppc-macos ~x64-macos ~x64-solaris"
 fi
 
 LICENSE="GPL-3"
@@ -109,7 +109,7 @@ src_configure() {
 		--with-systemdtmpfilesdir="${EPREFIX}"/usr/lib/tmpfiles.d
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)"
 		--disable-setuid # bug #662438
-		--enable-cache-owner=man
+		$(use_enable !prefix cache-owner man)  # bug #917024
 		--with-sections="${sections}"
 
 		$(use_enable nls)

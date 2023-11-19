@@ -534,10 +534,9 @@ tc-ld-force-bfd() {
 	ewarn "Forcing usage of the BFD linker"
 
 	# Set up LD to point directly to bfd if it's available.
-	local ld=$(tc-getLD "$@")
-	# We need to extract the first word in case there are flags appended
-	# to its value (like multilib), bug #545218.
-	local bfd_ld="${ld%% *}.bfd"
+	# Unset LD first so we get the default value from tc-getLD.
+	local ld=$(unset LD; tc-getLD "$@")
+	local bfd_ld="${ld}.bfd"
 	local path_ld=$(type -P "${bfd_ld}" 2>/dev/null)
 	[[ -e ${path_ld} ]] && export LD=${bfd_ld}
 
@@ -1215,6 +1214,20 @@ tc-get-c-rtlib() {
 	esac
 
 	return 0
+}
+
+# @FUNCTION: tc-get-ptr-size
+# @RETURN: Size of a pointer in bytes for CHOST (e.g. 4 or 8).
+tc-get-ptr-size() {
+	$(tc-getCPP) -P - <<< __SIZEOF_POINTER__ ||
+		die "Could not determine CHOST pointer size"
+}
+
+# @FUNCTION: tc-get-build-ptr-size
+# @RETURN: Size of a pointer in bytes for CBUILD (e.g. 4 or 8).
+tc-get-build-ptr-size() {
+	$(tc-getBUILD_CPP) -P - <<< __SIZEOF_POINTER__ ||
+		die "Could not determine CBUILD pointer size"
 }
 
 fi
