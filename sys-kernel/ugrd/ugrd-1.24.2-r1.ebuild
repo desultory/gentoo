@@ -13,14 +13,15 @@ SRC_URI="https://github.com/desultory/${PN}/archive/refs/tags/${PV}.tar.gz -> ${
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64"
+KEYWORDS="amd64 arm64"
 RESTRICT="test"
 PROPERTIES="test_privileged"
 
 RDEPEND="
 	app-misc/pax-utils
-	>=dev-python/zenlib-2.3.0[${PYTHON_USEDEP}]
-	>=dev-python/pycpio-1.4.0[${PYTHON_USEDEP}]
+	>=dev-python/zenlib-2.2.3[${PYTHON_USEDEP}]
+	<dev-python/zenlib-3.0.0[${PYTHON_USEDEP}]
+	>=dev-python/pycpio-1.3.2[${PYTHON_USEDEP}]
 	sys-apps/pciutils
 "
 
@@ -55,7 +56,6 @@ pkg_postinst() {
 	optfeature "ugrd.crypto.gpg support" app-crypt/gnupg
 	optfeature "ugrd.fs.lvm support" sys-fs/lvm2[lvm]
 	optfeature "ugrd.fs.mdraid support" sys-fs/mdadm
-	optfeature "ugrd.base.plymouth support" sys-boot/plymouth
 }
 
 distutils_enable_tests unittest

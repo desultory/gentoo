@@ -13,22 +13,20 @@ SRC_URI="https://github.com/desultory/${PN}/archive/refs/tags/${PV}.tar.gz -> ${
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 arm64"
+KEYWORDS="~amd64 ~arm64"
 RESTRICT="test"
 PROPERTIES="test_privileged"
 
 RDEPEND="
 	app-misc/pax-utils
-	>=dev-python/zenlib-2.3.2[${PYTHON_USEDEP}]
+	>=dev-python/zenlib-2.3.0[${PYTHON_USEDEP}]
+	<dev-python/zenlib-3.0.0[${PYTHON_USEDEP}]
 	>=dev-python/pycpio-1.4.0[${PYTHON_USEDEP}]
 	sys-apps/pciutils
 "
 
 BDEPEND="
 	test? (
-		sys-fs/btrfs-progs
-		sys-fs/xfsprogs
-		sys-fs/cryptsetup
 		amd64? ( app-emulation/qemu[qemu_softmmu_targets_x86_64] )
 		arm64? ( app-emulation/qemu[qemu_softmmu_targets_aarch64] )
 	)

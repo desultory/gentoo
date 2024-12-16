@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..12} )
 inherit distutils-r1 optfeature shell-completion
 
 DESCRIPTION="Python based initramfs generator with TOML defintions"
@@ -13,14 +13,13 @@ SRC_URI="https://github.com/desultory/${PN}/archive/refs/tags/${PV}.tar.gz -> ${
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64"
-RESTRICT="test"
-PROPERTIES="test_privileged"
+KEYWORDS="amd64 arm64"
 
 RDEPEND="
 	app-misc/pax-utils
-	>=dev-python/zenlib-2.3.0[${PYTHON_USEDEP}]
-	>=dev-python/pycpio-1.4.0[${PYTHON_USEDEP}]
+	>=dev-python/zenlib-2.2.3[${PYTHON_USEDEP}]
+	<dev-python/zenlib-3.0.0[${PYTHON_USEDEP}]
+	>=dev-python/pycpio-1.3.2[${PYTHON_USEDEP}]
 	sys-apps/pciutils
 "
 
@@ -54,14 +53,20 @@ pkg_postinst() {
 	optfeature "ugrd.fs.btrfs support" sys-fs/btrfs-progs
 	optfeature "ugrd.crypto.gpg support" app-crypt/gnupg
 	optfeature "ugrd.fs.lvm support" sys-fs/lvm2[lvm]
-	optfeature "ugrd.fs.mdraid support" sys-fs/mdadm
-	optfeature "ugrd.base.plymouth support" sys-boot/plymouth
 }
 
 distutils_enable_tests unittest
 
 src_test() {
-	addwrite /dev/kvm
+	if [[ ! -w '/dev/kvm' ]]; then
+		ewarn "Skipping tests: Cannot write to /dev/kvm."
+		return 1
+	fi
+	if [[ ! -r "$(command -v mount)" ]]; then
+		ewarn "Cannot read the mount binary, tests may fail until"
+		ewarn "util-linux is re-emerged without the sfperms feature."
+	fi
+
 	distutils-r1_src_test
 }
 

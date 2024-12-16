@@ -17,7 +17,8 @@ KEYWORDS="~amd64 ~arm64"
 
 RDEPEND="
 	app-misc/pax-utils
-	>=dev-python/zenlib-2.1.2[${PYTHON_USEDEP}]
+	>=dev-python/zenlib-2.2.2[${PYTHON_USEDEP}]
+	<dev-python/zenlib-3.0.0[${PYTHON_USEDEP}]
 	>=dev-python/pycpio-1.2.1[${PYTHON_USEDEP}]
 	sys-apps/pciutils
 "

@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..12} )
 inherit distutils-r1 optfeature shell-completion
 
 DESCRIPTION="Python based initramfs generator with TOML defintions"
@@ -19,16 +19,14 @@ PROPERTIES="test_privileged"
 
 RDEPEND="
 	app-misc/pax-utils
-	>=dev-python/zenlib-2.3.2[${PYTHON_USEDEP}]
+	>=dev-python/zenlib-2.3.0[${PYTHON_USEDEP}]
+	<dev-python/zenlib-3.0.0[${PYTHON_USEDEP}]
 	>=dev-python/pycpio-1.4.0[${PYTHON_USEDEP}]
 	sys-apps/pciutils
 "
 
 BDEPEND="
 	test? (
-		sys-fs/btrfs-progs
-		sys-fs/xfsprogs
-		sys-fs/cryptsetup
 		amd64? ( app-emulation/qemu[qemu_softmmu_targets_x86_64] )
 		arm64? ( app-emulation/qemu[qemu_softmmu_targets_aarch64] )
 	)
